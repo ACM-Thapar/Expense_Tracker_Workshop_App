@@ -115,7 +115,11 @@ class _ExpenseDetailsState extends State<ExpenseDetails> {
                 InkWell(
                   onTap: (){
                     showDialog(context: context, builder: (context) => AlertDialog(
-                      title: Text("Update Balance"),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15)
+                      ),
+                      backgroundColor: Color(0xff010A43),
+                      title: Text("Update Balance", style: TextStyle(fontSize: 24,color: Colors.white, fontWeight: FontWeight.bold)),
                       content: TextField(
                         onChanged: (text) {
                           balance = int.parse(text);
@@ -130,8 +134,16 @@ class _ExpenseDetailsState extends State<ExpenseDetails> {
                             hintText: 'New Balance', hintStyle: TextStyle(color: Color(0xff010A43), fontWeight:FontWeight.bold )),
                       ),
                       actions: [
-                        TextButton(onPressed: (){
+                        ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12), // <-- Radius
+                              ),
+                            ),
+                            onPressed: (){
                           saveAmt(balance);
+                          Navigator.pop(context);
+
                         }, child: Text('Update'))
                       ],
                     ));
@@ -273,77 +285,77 @@ class _ExpenseDetailsState extends State<ExpenseDetails> {
                           color: Color(0xff010A43)
                       ),
                       padding: EdgeInsets.fromLTRB(20, 50, 20, 20),
-                      child: Column(
-                        children: [
-                          Text("Add Transaction",
-                              style: TextStyle(fontSize: 24,color: Colors.white, fontWeight: FontWeight.bold),
-                              textAlign: TextAlign.center
-                          ),
-                          SizedBox(height: 50,),
-                          TextField(
-                            onChanged: (text) {
-                              transDesc = text;
-                            },
-                            cursorColor: Colors.white,
-                                  decoration: InputDecoration(
-                                      filled: true, //<-- SEE HERE
-                                      fillColor: Colors.white,
-                                      border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(10.0),
-                                      ),
-                                      hintText: 'Transaction Details', hintStyle: TextStyle(color: Color(0xff010A43), fontWeight:FontWeight.bold )),
-                                ),
-                          SizedBox(height: 20,),
-                          TextField(
-                            onChanged: (text) {
-                              transAmt = text;
-                            },
-                            cursorColor: Colors.white,
-                            decoration: InputDecoration(
-                                filled: true, //<-- SEE HERE
-                                fillColor: Colors.white,
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10.0),
-                                ),
-                                hintText: 'Transaction Amount', hintStyle: TextStyle(color: Color(0xff010A43), fontWeight:FontWeight.bold )),
-                          ),
-                          SizedBox(height: 20,),
-                          ElevatedButton(
-
-                            onPressed: () async{
-
-                              transactions.insert(0, Transaction(amount: int.parse(transAmt), desc: transDesc));
-
-                              balance = balance - int.parse(transAmt);
-
-                              setState(() {
-
-                              });
-                              saveData();
-                              saveAmt(balance);
-
-
-                            },
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text('ADD'),
+                      child: SingleChildScrollView(
+                        child: Column(
+                          children: [
+                            Text("Add Transaction",
+                                style: TextStyle(fontSize: 24,color: Colors.white, fontWeight: FontWeight.bold),
+                                textAlign: TextAlign.center
                             ),
-                            style: ElevatedButton.styleFrom(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12), // <-- Radius
+                            SizedBox(height: 50,),
+                            TextField(
+                              onChanged: (text) {
+                                transDesc = text;
+                              },
+                              cursorColor: Colors.white,
+                                    decoration: InputDecoration(
+                                        filled: true, //<-- SEE HERE
+                                        fillColor: Colors.white,
+                                        border: OutlineInputBorder(
+                                          borderRadius: BorderRadius.circular(10.0),
+                                        ),
+                                        hintText: 'Transaction Details', hintStyle: TextStyle(color: Color(0xff010A43), fontWeight:FontWeight.bold )),
+                                  ),
+                            SizedBox(height: 20,),
+                            TextField(
+                              onChanged: (text) {
+                                transAmt = text;
+                              },
+                              cursorColor: Colors.white,
+                              decoration: InputDecoration(
+                                  filled: true, //<-- SEE HERE
+                                  fillColor: Colors.white,
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10.0),
+                                  ),
+                                  hintText: 'Transaction Amount', hintStyle: TextStyle(color: Color(0xff010A43), fontWeight:FontWeight.bold )),
+                            ),
+                            SizedBox(height: 20,),
+                            ElevatedButton(
+
+                              onPressed: () async{
+
+                                transactions.insert(0, Transaction(amount: int.parse(transAmt), desc: transDesc));
+
+                                balance = balance - int.parse(transAmt);
+
+                                setState(() {
+
+                                });
+                                saveData();
+                                saveAmt(balance);
+                                Navigator.pop(context);
+
+
+                              },
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text('ADD'),
                               ),
-                            ),
-                          )
+                              style: ElevatedButton.styleFrom(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12), // <-- Radius
+                                ),
+                              ),
+                            )
 
 
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                   ),
-                  Positioned(
-                      top: -100,
-                      child: Image.network("https://i.imgur.com/2yaf2wb.png", width: 150, height: 150)
-                  )
+
                 ],
               )
           ));
@@ -492,7 +504,7 @@ class TransactionTile extends StatelessWidget {
       trailing: Text(
         "\$$amount",
         style: TextStyle(
-          fontSize: 24,
+          fontSize: 20,
           color: Colors.white,
         ),
       ),
@@ -508,7 +520,7 @@ class Status extends StatelessWidget {
     return Container(
       margin: EdgeInsets.only(
         top: 5,
-        right: 75,
+        right: 45,
       ),
       height: 28,
       decoration: BoxDecoration(
