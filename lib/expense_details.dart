@@ -93,19 +93,21 @@ class _ExpenseDetailsState extends State<ExpenseDetails> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        "< Back",
+                        "F.R.O.S.H",
                         style: TextStyle(
-                          color: activeColor,
+                          color: Colors.white,
                           fontSize: 20,
+                            fontWeight: FontWeight.bold
                         ),
                       ),
-                      CircleAvatar(
-                        backgroundColor: Color(0xff0E164C),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(100),
-                          child: Image.asset("assets/images/user.jpg"),
+                      Text(
+                        "A.C.M",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold
                         ),
-                      )
+                      ),
                     ],
                   ),
                 ),
@@ -150,7 +152,7 @@ class _ExpenseDetailsState extends State<ExpenseDetails> {
                   },
                   child: Container(
                     height: MediaQuery.of(context).size.height * 0.4,
-                    child: Container(
+                    child: Padding(
                       padding: EdgeInsets.symmetric(
                         vertical: 10,
                         horizontal: 20,
@@ -160,7 +162,7 @@ class _ExpenseDetailsState extends State<ExpenseDetails> {
                           ClipRRect(
                             borderRadius: BorderRadius.circular(30),
                             child: Image.asset(
-                              cardList[0].image,
+                              "assets/images/card1.png",
                               fit: BoxFit.fill,
                             ),
                           ),
@@ -233,11 +235,21 @@ class _ExpenseDetailsState extends State<ExpenseDetails> {
                             ),
                             Row(
                               children: [
-                                Text(
-                                  "Sort By",
-                                  style: TextStyle(
-                                    color: inactiveColor,
-                                    fontSize: 18,
+                                InkWell(
+                                  onTap:(){
+                                    prefs.clear();
+                                    transactions.clear();
+                                    balance = 0;
+                                    setState(() {
+
+                                    });
+                                  },
+                                  child: Text(
+                                    "Clear All",
+                                    style: TextStyle(
+                                      color: inactiveColor,
+                                      fontSize: 18,
+                                    ),
                                   ),
                                 ),
                                 SizedBox(width: 10),
@@ -369,108 +381,12 @@ class _ExpenseDetailsState extends State<ExpenseDetails> {
 
 }
 
-class Cards {
-  String image;
-  String name;
-  double amount;
-  int cardNumber;
-
-  Cards({required this.amount, required this.cardNumber, required this.image, required this.name});
-}
-
-List<Cards> cardList = [
-  Cards(
-    image: "assets/images/card1.png",
-    amount: 4500.87,
-    cardNumber: 4536,
-    name: "Master Card",
-  ),
-  Cards(
-    image: "assets/images/card2.png",
-    amount: 532.71,
-    cardNumber: 8137,
-    name: "Visa Card",
-  ),
-];
-
-class Card extends StatelessWidget {
-  int index;
-
-  Card({required this.index});
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.symmetric(
-        vertical: 10,
-        horizontal: 20,
-      ),
-      child: Stack(
-        children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(30),
-            child: Image.asset(
-              cardList[index].image,
-              fit: BoxFit.fill,
-            ),
-          ),
-          Container(
-            padding: EdgeInsets.all(30),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  cardList[index].name,
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Icon(
-                      Icons.more_horiz,
-                      size: 60,
-                    ),
-                    Text(
-                      cardList[index].cardNumber.toString(),
-                      style: TextStyle(
-                        fontSize: 23,
-                      ),
-                    )
-                  ],
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                Text(
-                  "\$${cardList[index].amount}",
-                  style: TextStyle(
-                    fontWeight: FontWeight.w700,
-                    fontSize: 30,
-                  ),
-                )
-              ],
-            ),
-          )
-        ],
-      ),
-    );
-  }
-}
-
-List<String> listItems = ["Recent", "Amount", "Ascending", "Descending"];
 
 
 
-List<Transaction> transactions = [
-  Transaction(
-    desc: "hrllo",
-    amount: 100
-  ),
 
-];
+
+List<Transaction> transactions = [];
 
 class TransactionTile extends StatelessWidget {
   final String imageUrl, name;
@@ -498,8 +414,32 @@ class TransactionTile extends StatelessWidget {
           fontSize: 18,
         ),
       ),
-      subtitle: Status(
-        status: paid,
+      subtitle: Container(
+        margin: EdgeInsets.only(
+          top: 5,
+          right: 45,
+        ),
+        height: 28,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(100),
+          color: Colors.red,
+        ),
+        child: Row(
+          children: [
+            SizedBox(width: 3),
+            Icon(
+              Icons.check_circle,
+              color: Colors.white,
+            ),
+            SizedBox(width: 5),
+            Text(
+              "Paid",
+              style: TextStyle(
+                color: Colors.white,
+              ),
+            )
+          ],
+        ),
       ),
       trailing: Text(
         "\$$amount",
@@ -512,37 +452,3 @@ class TransactionTile extends StatelessWidget {
   }
 }
 
-class Status extends StatelessWidget {
-  bool status;
-  Status({required this.status});
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.only(
-        top: 5,
-        right: 45,
-      ),
-      height: 28,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(100),
-        color: status ? Colors.red : Colors.teal,
-      ),
-      child: Row(
-        children: [
-          SizedBox(width: 3),
-          Icon(
-            Icons.check_circle,
-            color: Colors.white,
-          ),
-          SizedBox(width: 5),
-          Text(
-            status ? "Paid" : "Recieved",
-            style: TextStyle(
-              color: Colors.white,
-            ),
-          )
-        ],
-      ),
-    );
-  }
-}
