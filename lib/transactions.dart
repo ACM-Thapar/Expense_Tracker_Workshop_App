@@ -1,19 +1,21 @@
-class Transaction {
-
+class Transactions {
   String desc;
 
   int amount;
+  String time;
 
-  Transaction({required this.amount, required this.desc});
+  Transactions({required this.amount, required this.desc, required this.time});
 
-  Transaction.fromMap(Map map):
-      this.desc = map['desc'],
-      this.amount = map['amount'];
+  Transactions.fromMap(Map map)
+      : desc = map['description'],
+        amount = map['Amount'],
+        time = map['time'];
 
-  Map toMap(){
-    return{
-      'desc':this.desc,
-      'amount':this.amount
+  Map toMap() {
+    return {
+      'description': desc,
+      'Amount': amount,
+      'time': time,
     };
   }
 }
