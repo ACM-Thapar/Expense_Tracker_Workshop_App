@@ -8,14 +8,14 @@ TransactionData? transactionData;
 
 class TransactionData {
   int total;
-  int totalAmount;
+  double totalAmount;
   TransactionData({required this.total, required this.totalAmount});
   TransactionData.fromMap(Map map)
       : total = map['totalTransactions'],
         totalAmount = map['totalAmount'];
 }
 
-Future<int> getAllData() async {
+Future<double> getAllData() async {
   await Future.delayed(const Duration(milliseconds: 1));
   var val = await FirebaseFirestore.instance
       .collection('users')
@@ -28,7 +28,7 @@ Future<int> getAllData() async {
       Map<String, dynamic>.from(val.data() as Map<String, dynamic>));
   // await Future.delayed(const Duration(milliseconds: 1));
   // print(transactionData?.total);
-  return transactionData?.totalAmount as int;
+  return double.parse('${transactionData?.totalAmount}');
 }
 
 Future<List<Transactions>> getAllData2() async {
@@ -54,6 +54,52 @@ Future<List<Transactions>> getAllData2() async {
   return [];
 }
 
+Future<List<Transactions>> getAllIncome() async {
+  if (user == null) {
+    return [];
+  }
+  await Future.delayed(const Duration(milliseconds: 1));
+  user = auth.currentUser!;
+  var val = await FirebaseFirestore.instance
+      .collection('users')
+      .doc(user?.email)
+      .collection('income')
+      .get();
+  var documents = val.docs;
+  if (documents.isNotEmpty) {
+    return documents.map((document) {
+      Transactions bookingList =
+          Transactions.fromMap(Map<String, dynamic>.from(document.data()));
+
+      return bookingList;
+    }).toList();
+  }
+  return [];
+}
+
+Future<List<Transactions>> getAllExpense() async {
+  if (user == null) {
+    return [];
+  }
+  await Future.delayed(const Duration(milliseconds: 1));
+  user = auth.currentUser!;
+  var val = await FirebaseFirestore.instance
+      .collection('users')
+      .doc(user?.email)
+      .collection('expense')
+      .get();
+  var documents = val.docs;
+  if (documents.isNotEmpty) {
+    return documents.map((document) {
+      Transactions bookingList =
+          Transactions.fromMap(Map<String, dynamic>.from(document.data()));
+
+      return bookingList;
+    }).toList();
+  }
+  return [];
+}
+
 Future<void> removeAllData() async {
   await Future.delayed(const Duration(milliseconds: 1));
   await FirebaseFirestore.instance
@@ -64,15 +110,33 @@ Future<void> removeAllData() async {
       .collection('users')
       .doc(user?.email)
       .collection('transactions');
-  // var collection = FirebaseFirestore.instance.collection('collection');
+
   var snapshots = await collections.get();
   for (var doc in snapshots.docs) {
+    await doc.reference.delete();
+  }
+  var collection2 = FirebaseFirestore.instance
+      .collection('users')
+      .doc(user?.email)
+      .collection('income');
+
+  var snapshot2 = await collection2.get();
+  for (var doc in snapshot2.docs) {
+    await doc.reference.delete();
+  }
+  collection2 = FirebaseFirestore.instance
+      .collection('users')
+      .doc(user?.email)
+      .collection('expense');
+
+  snapshot2 = await collection2.get();
+  for (var doc in snapshot2.docs) {
     await doc.reference.delete();
   }
   getAllData();
 }
 
-void setAmountData(int balance, int data1) async {
+void setAmountData(double balance, int data1) async {
   final fi = FirebaseFirestore.instance.collection('users').doc(user?.email);
 
   fi.set({"totalAmount": balance, "totalTransactions": data1});

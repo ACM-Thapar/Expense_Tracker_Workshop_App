@@ -10,7 +10,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../pages/signinpage.dart';
 
 final FirebaseAuth auth = FirebaseAuth.instance;
-late SharedPreferences prefs;
+
 Future<void> signup(BuildContext context) async {
   final GoogleSignIn googleSignIn = GoogleSignIn();
   final GoogleSignInAccount? googleSignInAccount = await googleSignIn.signIn();
@@ -23,7 +23,7 @@ Future<void> signup(BuildContext context) async {
 
     // Getting users credential
     UserCredential result = await auth.signInWithCredential(authCredential);
-    prefs = await SharedPreferences.getInstance();
+
     User user = result.user!;
     user = auth.currentUser!;
     moveToHomePage(context);

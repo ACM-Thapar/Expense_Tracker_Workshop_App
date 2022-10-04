@@ -1,21 +1,23 @@
 class Transactions {
   String desc;
 
-  int amount;
+  double amount;
   String time;
+  String type;
 
-  Transactions({required this.amount, required this.desc, required this.time});
+  Transactions(
+      {required this.amount,
+      required this.desc,
+      required this.time,
+      required this.type});
 
   Transactions.fromMap(Map map)
       : desc = map['description'],
-        amount = map['Amount'],
-        time = map['time'];
+        amount = double.parse('${map['Amount']}'),
+        time = map['time'],
+        type = map['type'];
 
   Map toMap() {
-    return {
-      'description': desc,
-      'Amount': amount,
-      'time': time,
-    };
+    return {'description': desc, 'Amount': amount, 'time': time, 'type': type};
   }
 }
