@@ -5,10 +5,9 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter_app/controllers/fetch_data.dart';
 import 'package:flutter_app/controllers/signin.dart';
 import 'package:flutter_app/pages/expense_add.dart';
+import 'package:flutter_app/pages/splitexpense_detail.dart';
 import 'package:flutter_app/utils/alertdialog.dart';
-import 'package:intl/intl.dart';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -39,31 +38,10 @@ class _ExpenseDetailsState extends State<ExpenseDetails>
 
   double balance = 0;
 
-  // Future<void> saveData() async {
-  //   int data1;
-  //   if (transactionData == null) {
-  //     data1 = 1000000000;
-  //   } else {
-  //     data1 = transactionData?.total as int;
-  //   }
-  //   if (user == null) {
-  //     return;
-  //   }
-  //   final fi = FirebaseFirestore.instance.collection('users').doc(user?.email);
-  //   final DateTime now = DateTime.now();
-  //   final DateFormat formatter = DateFormat('yyyy-MM-dd');
-  //   final String formatted = formatter.format(now);
-  //   fi.collection('transactions').doc('${data1 + 1}').set({
-  //     "description": transDesc,
-  //     "Amount": double.parse(transAmt),
-  //     "time": formatted
-  //   }, SetOptions(merge: false));
-  //   setAmountData(balance, data1 + 1);
-  //   getAllData();
-  // }
-
   void initsharedPrefence() async {
     transactions = await getAllData2();
+
+    print(transactions);
 
     setState(() {});
 
@@ -88,7 +66,7 @@ class _ExpenseDetailsState extends State<ExpenseDetails>
         }
       },
     );
-    _tabController = TabController(length: 3, vsync: this);
+    _tabController = TabController(length: 4, vsync: this);
     _tabController.animateTo(2);
     setState(() {});
     if (auth.currentUser != null) {
@@ -215,7 +193,7 @@ class _ExpenseDetailsState extends State<ExpenseDetails>
                                             setAmountData(
                                                 balance,
                                                 transactionData == null
-                                                    ? 0
+                                                    ? 1000000000
                                                     : transactionData?.total
                                                         as int);
 
@@ -360,6 +338,10 @@ class _ExpenseDetailsState extends State<ExpenseDetails>
                                 'Income',
                                 style: TextStyle(fontSize: 20),
                               ),
+                              Text(
+                                'Split',
+                                style: TextStyle(fontSize: 20),
+                              ),
                             ],
                           ),
                         ),
@@ -384,8 +366,13 @@ class _ExpenseDetailsState extends State<ExpenseDetails>
                                           .desc,
                                   paid:
                                       transactions[transactions.length - i - 1]
-                                                  .type ==
-                                              'expense'
+                                                      .type ==
+                                                  'expense' ||
+                                              transactions[transactions.length -
+                                                          i -
+                                                          1]
+                                                      .type ==
+                                                  'splitwise'
                                           ? true
                                           : false,
                                 ),
@@ -442,6 +429,42 @@ class _ExpenseDetailsState extends State<ExpenseDetails>
                                         : SizedBox(),
                                 itemCount: transactions.length,
                               ),
+                              ListView.builder(
+                                // reverse: true,
+                                itemBuilder: (ctx, i) => transactions[
+                                                transactions.length - i - 1]
+                                            .type ==
+                                        'splitwise'
+                                    ? InkWell(
+                                        onTap: () {
+                                          Navigator.of(context).push(
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      SplitExpenseDetails(
+                                                          id: transactions[
+                                                                  transactions
+                                                                          .length -
+                                                                      i -
+                                                                      1]
+                                                              .id)));
+                                        },
+                                        child: TransactionTile(
+                                          amount: transactions[
+                                                  transactions.length - i - 1]
+                                              .amount
+                                              .toDouble(),
+                                          date: transactions[
+                                                  transactions.length - i - 1]
+                                              .time,
+                                          name: transactions[
+                                                  transactions.length - i - 1]
+                                              .desc,
+                                          paid: true,
+                                        ),
+                                      )
+                                    : SizedBox(),
+                                itemCount: transactions.length,
+                              ),
                             ],
                           ),
                         ),
@@ -457,110 +480,6 @@ class _ExpenseDetailsState extends State<ExpenseDetails>
                     ? dialogbox(context)
                     : Navigator.of(context).push(
                         MaterialPageRoute(builder: (context) => ExpensseAdd()));
-                // : showDialog(
-                //     context: context,
-                //     builder: (context) => Dialog(
-                //         backgroundColor: Colors.transparent,
-                //         insetPadding: const EdgeInsets.all(10),
-                //         child: Stack(
-                //           clipBehavior: Clip.none,
-                //           alignment: Alignment.center,
-                //           children: <Widget>[
-                //             Padding(
-                //               padding: const EdgeInsets.all(8.0),
-                //               child: Container(
-                //                 width: double.infinity,
-                //                 decoration: BoxDecoration(
-                //                     borderRadius: BorderRadius.circular(15),
-                //                     color: const Color(0xff010A43)),
-                //                 padding:
-                //                     const EdgeInsets.fromLTRB(20, 50, 20, 20),
-                //                 child: SingleChildScrollView(
-                //                   child: Column(
-                //                     children: [
-                //                       const Text("Add Transaction",
-                //                           style: TextStyle(
-                //                               fontSize: 24,
-                //                               color: Colors.white,
-                //                               fontWeight: FontWeight.bold),
-                //                           textAlign: TextAlign.center),
-                //                       const SizedBox(
-                //                         height: 50,
-                //                       ),
-                //                       TextField(
-                //                         onChanged: (text) {
-                //                           transDesc = text;
-                //                         },
-                //                         cursorColor: Colors.white,
-                //                         decoration: InputDecoration(
-                //                             filled: true, //<-- SEE HERE
-                //                             fillColor: Colors.white,
-                //                             border: OutlineInputBorder(
-                //                               borderRadius:
-                //                                   BorderRadius.circular(10.0),
-                //                             ),
-                //                             hintText: 'Transaction Details',
-                //                             hintStyle: const TextStyle(
-                //                                 color: Color(0xff010A43),
-                //                                 fontWeight: FontWeight.bold)),
-                //                       ),
-                //                       const SizedBox(
-                //                         height: 20,
-                //                       ),
-                //                       TextField(
-                //                         onChanged: (text) {
-                //                           transAmt = text;
-                //                         },
-                //                         cursorColor: Colors.white,
-                //                         decoration: InputDecoration(
-                //                             filled: true, //<-- SEE HERE
-                //                             fillColor: Colors.white,
-                //                             border: OutlineInputBorder(
-                //                               borderRadius:
-                //                                   BorderRadius.circular(10.0),
-                //                             ),
-                //                             hintText: 'Transaction Amount',
-                //                             hintStyle: const TextStyle(
-                //                                 color: Color(0xff010A43),
-                //                                 fontWeight: FontWeight.bold)),
-                //                       ),
-                //                       const SizedBox(
-                //                         height: 20,
-                //                       ),
-                //                       ElevatedButton(
-                //                         onPressed: () async {
-                //                           transactions.insert(
-                //                               transactions.length,
-                //                               Transactions(
-                //                                   amount: int.parse(transAmt),
-                //                                   desc: transDesc,
-                //                                   time: '${DateTime.now().day}'));
-
-                //                           balance = balance - int.parse(transAmt);
-
-                //                           setState(() {});
-                //                           saveData();
-                //                           setState(() {});
-                //                           Navigator.pop(context);
-                //                         },
-                //                         style: ElevatedButton.styleFrom(
-                //                           shape: RoundedRectangleBorder(
-                //                             borderRadius: BorderRadius.circular(
-                //                                 12), // <-- Radius
-                //                           ),
-                //                         ),
-                //                         child: const Padding(
-                //                           padding: EdgeInsets.all(8.0),
-                //                           child: Text('ADD'),
-                //                         ),
-                //                       )
-                //                     ],
-                //                   ),
-                //                 ),
-                //               ),
-                //             ),
-                //           ],
-                //         )));
               },
               backgroundColor: const Color(0xff010c86),
               child: const Icon(Icons.add),

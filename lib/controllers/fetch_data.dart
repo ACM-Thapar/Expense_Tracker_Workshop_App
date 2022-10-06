@@ -54,28 +54,28 @@ Future<List<Transactions>> getAllData2() async {
   return [];
 }
 
-// Future<List<Transactions>> getAllIncome() async {
-//   if (user == null) {
-//     return [];
-//   }
-//   await Future.delayed(const Duration(milliseconds: 1));
-//   user = auth.currentUser!;
-//   var val = await FirebaseFirestore.instance
-//       .collection('users')
-//       .doc(user?.email)
-//       .collection('income')
-//       .get();
-//   var documents = val.docs;
-//   if (documents.isNotEmpty) {
-//     return documents.map((document) {
-//       Transactions bookingList =
-//           Transactions.fromMap(Map<String, dynamic>.from(document.data()));
+Future<List<SplitTransaction>> getAllSplitWise() async {
+  if (user == null) {
+    return [];
+  }
+  await Future.delayed(const Duration(milliseconds: 1));
+  user = auth.currentUser!;
+  var val = await FirebaseFirestore.instance
+      .collection('users')
+      .doc(user?.email)
+      .collection('splitwise')
+      .get();
+  var documents = val.docs;
+  if (documents.isNotEmpty) {
+    return documents.map((document) {
+      SplitTransaction bookingList =
+          SplitTransaction.fromMap(Map<String, dynamic>.from(document.data()));
 
-//       return bookingList;
-//     }).toList();
-//   }
-//   return [];
-// }
+      return bookingList;
+    }).toList();
+  }
+  return [];
+}
 
 // Future<List<Transactions>> getAllExpense() async {
 //   if (user == null) {
@@ -115,15 +115,15 @@ Future<void> removeAllData() async {
   for (var doc in snapshots.docs) {
     await doc.reference.delete();
   }
-  // var collection2 = FirebaseFirestore.instance
-  //     .collection('users')
-  //     .doc(user?.email)
-  //     .collection('income');
+  var collection2 = FirebaseFirestore.instance
+      .collection('users')
+      .doc(user?.email)
+      .collection('splitwise');
 
-  // var snapshot2 = await collection2.get();
-  // for (var doc in snapshot2.docs) {
-  //   await doc.reference.delete();
-  // }
+  var snapshot2 = await collection2.get();
+  for (var doc in snapshot2.docs) {
+    await doc.reference.delete();
+  }
   // collection2 = FirebaseFirestore.instance
   //     .collection('users')
   //     .doc(user?.email)
