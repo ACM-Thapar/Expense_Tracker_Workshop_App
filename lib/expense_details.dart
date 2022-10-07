@@ -2,6 +2,7 @@
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/gestures.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_app/controllers/fetch_data.dart';
 import 'package:flutter_app/controllers/signin.dart';
 import 'package:flutter_app/pages/expense_add.dart';
@@ -347,7 +348,7 @@ class _ExpenseDetailsState extends State<ExpenseDetails>
                         ),
                         SizedBox(
                           width: MediaQuery.of(context).size.width,
-                          height: MediaQuery.of(context).size.height / 2.15,
+                          height: 320,
                           child: TabBarView(
                             controller: _tabController,
                             children: [
@@ -550,7 +551,7 @@ class TransactionTile extends StatelessWidget {
         ),
       ),
       trailing: Text(
-        "₹$amount",
+        "₹${amount.toStringAsFixed(2)}",
         style: const TextStyle(
           fontSize: 20,
           color: Colors.white,

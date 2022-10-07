@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
@@ -86,6 +84,8 @@ class _ExpensseAddState extends State<ExpensseAdd> {
       setState(() {
         type = 'income';
       });
+    } else if (isSame) {
+      type = 'splitwise';
     } else if (isSplitwise) {
       type = 'splitwise';
       transAmt = '$totalAm';
@@ -95,6 +95,7 @@ class _ExpensseAddState extends State<ExpensseAdd> {
     final DateTime now = DateTime.now();
     final DateFormat formatter = DateFormat('dd-MM-yyyy');
     final String formatted = formatter.format(now);
+
     fi.collection('transactions').doc('${data1 + 1}').set({
       "description": transDesc,
       "Amount": double.parse(transAmt),
@@ -224,7 +225,7 @@ class _ExpensseAddState extends State<ExpensseAdd> {
                             borderRadius: BorderRadius.circular(10),
                             border: Border.all(width: 2, color: col2)),
                         height: 60,
-                        width: MediaQuery.of(context).size.width / 2.2,
+                        width: MediaQuery.of(context).size.width / 3.2,
                         child: Center(
                             child: Text(
                           "Expense",
@@ -250,7 +251,7 @@ class _ExpensseAddState extends State<ExpensseAdd> {
                             borderRadius: BorderRadius.circular(10),
                             border: Border.all(width: 2, color: col)),
                         height: 60,
-                        width: MediaQuery.of(context).size.width / 2.2,
+                        width: MediaQuery.of(context).size.width / 3.2,
                         child: Center(
                             child: Text(
                           "Income",
@@ -261,38 +262,43 @@ class _ExpensseAddState extends State<ExpensseAdd> {
                         )),
                       ),
                     ),
+                    InkWell(
+                      onTap: () {
+                        setState(() {
+                          col = Colors.white;
+                          col2 = Colors.white;
+                          isSplitwise = true;
+                        });
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                            color: Colors.purpleAccent,
+                            borderRadius: BorderRadius.circular(10),
+                            border: Border.all(
+                                width: 2,
+                                color: isSplitwise
+                                    ? Colors.lightBlueAccent
+                                    : Colors.white)),
+                        height: 60,
+                        width: MediaQuery.of(context).size.width / 3.2,
+                        child: Center(
+                            child: Text(
+                          "SplitWise",
+                          style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: isSplitwise
+                                  ? Colors.lightBlueAccent
+                                  : Colors.white),
+                        )),
+                      ),
+                    ),
                   ],
                 ),
-                SizedBox(
-                  height: 10,
-                ),
-                InkWell(
-                  onTap: () {
-                    setState(() {
-                      col = Colors.white;
-                      col2 = Colors.white;
-                      isSplitwise = true;
-                    });
-                  },
-                  child: Container(
-                    decoration: BoxDecoration(
-                        color: Colors.blue,
-                        borderRadius: BorderRadius.circular(10),
-                        border: Border.all(
-                            width: 2,
-                            color: isSplitwise ? Colors.amber : Colors.white)),
-                    height: 60,
-                    width: MediaQuery.of(context).size.width / 2.2,
-                    child: Center(
-                        child: Text(
-                      "SplitWise",
-                      style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: isSplitwise ? Colors.amber : Colors.white),
-                    )),
-                  ),
-                ),
+                // SizedBox(
+                //   height: 10,
+                // ),
+
                 const SizedBox(
                   height: 20,
                 ),
@@ -438,7 +444,7 @@ class _ExpensseAddState extends State<ExpensseAdd> {
                                       given.removeLast();
                                     }
                                   }
-                                  if (isSame) {
+                                  if (isSame && transAmt != '') {
                                     totalAm = double.parse(transAmt);
                                     for (int i = 0; i < noofPeople; i++) {
                                       amount[i] =
@@ -458,8 +464,9 @@ class _ExpensseAddState extends State<ExpensseAdd> {
                 Container(
                   width: MediaQuery.of(context).size.width / 1.1,
                   child: TextField(
+                    // keyboardAppearance: ,
                     onChanged: (text) {
-                      transDesc = text;
+                      text == '' ? transDesc = '' : transDesc = text;
                     },
                     cursorColor: Colors.white,
                     decoration: InputDecoration(
@@ -481,12 +488,15 @@ class _ExpensseAddState extends State<ExpensseAdd> {
                     ? Container(
                         width: MediaQuery.of(context).size.width / 1.1,
                         child: TextField(
+                          keyboardType: TextInputType.number,
                           onChanged: (text) {
-                            transAmt = text;
-                            for (int i = 0; i < noofPeople; i++) {
-                              amount[i] = double.parse(transAmt) / noofPeople;
-                            }
-                            setState(() {});
+                            setState(() {
+                              transAmt = text;
+                              totalAm = double.parse(transAmt);
+                              for (int i = 0; i < noofPeople; i++) {
+                                amount[i] = double.parse(transAmt) / noofPeople;
+                              }
+                            });
                           },
                           cursorColor: Colors.white,
                           decoration: InputDecoration(
