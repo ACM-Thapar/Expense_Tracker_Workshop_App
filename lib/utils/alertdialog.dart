@@ -28,3 +28,7 @@ void dialogbox(BuildContext context) {
             ],
           ));
 }
+
+// void paidDialogBox(BuildContext context) {
+  
+// }
