@@ -84,7 +84,7 @@ class _ExpensseAddState extends State<ExpensseAdd> {
       setState(() {
         type = 'income';
       });
-    } else if (isSame) {
+    } else if (isSame && isSplitwise) {
       type = 'splitwise';
     } else if (isSplitwise) {
       type = 'splitwise';
@@ -177,6 +177,7 @@ class _ExpensseAddState extends State<ExpensseAdd> {
                                 type: isIncome ? 'income' : 'expense',
                                 id: data1 + 1));
                         balance = await getAllData();
+                        isSplitwise ? transAmt = '$totalAm' : null;
                         isIncome
                             ? balance = balance + double.parse(transAmt)
                             : isSplitwise

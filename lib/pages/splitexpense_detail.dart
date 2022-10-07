@@ -26,6 +26,12 @@ class _SplitExpenseDetailsState extends State<SplitExpenseDetails> {
 
   User? user;
 
+  @override
+  void dispose() {
+    splitTransactions.clear();
+    super.dispose();
+  }
+
   void initGetData() async {
     splitTransactions = await getAllSplitWise();
     // print(splitTransactions);
