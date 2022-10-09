@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
@@ -31,7 +33,7 @@ class _ExpensseAddState extends State<ExpensseAdd> {
   }
 
   bool isIncome = false;
-  bool InternetCheck = false;
+  bool internetCheck = false;
   bool isSame = true;
   bool isSplitwise = false;
   Color col = Colors.white;
@@ -59,11 +61,11 @@ class _ExpensseAddState extends State<ExpensseAdd> {
       (event) {
         if (event == ConnectivityResult.none) {
           setState(() {
-            InternetCheck = true;
+            internetCheck = true;
           });
         } else {
           setState(() {
-            InternetCheck = false;
+            internetCheck = false;
           });
         }
       },
@@ -131,9 +133,9 @@ class _ExpensseAddState extends State<ExpensseAdd> {
 
   @override
   Widget build(BuildContext context) {
-    return InternetCheck
-        ? Material(
-            color: const Color(0xff010A43),
+    return internetCheck
+        ? const Material(
+            color: Color(0xff010A43),
             child: Center(
               child: Text(
                 "No Internet Connection. Please Connect To Internet To Continue.",
@@ -143,7 +145,7 @@ class _ExpensseAddState extends State<ExpensseAdd> {
             ),
           )
         : Material(
-            color: Color(0xff0E164C),
+            color: const Color(0xff0E164C),
             child: SafeArea(
                 child: Column(
               children: [
@@ -164,8 +166,6 @@ class _ExpensseAddState extends State<ExpensseAdd> {
                     ),
                     ElevatedButton(
                       onPressed: () async {
-                        print(name);
-                        print(amount);
                         transactions.insert(
                             transactions.length,
                             Transactions(
@@ -190,7 +190,7 @@ class _ExpensseAddState extends State<ExpensseAdd> {
                         Navigator.pushAndRemoveUntil(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => ExpenseDetails()),
+                                builder: (context) => const ExpenseDetails()),
                             (route) => false);
                       },
                       style: ElevatedButton.styleFrom(
@@ -374,8 +374,8 @@ class _ExpensseAddState extends State<ExpensseAdd> {
                           ),
                         ],
                       )
-                    : SizedBox(),
-                SizedBox(
+                    : const SizedBox(),
+                const SizedBox(
                   height: 10,
                 ),
                 isSplitwise
@@ -400,31 +400,31 @@ class _ExpensseAddState extends State<ExpensseAdd> {
                               items: _mesaures
                                   .map((String value) =>
                                       DropdownMenuItem<String>(
+                                        value: value,
                                         child: Row(
                                           children: [
-                                            SizedBox(
+                                            const SizedBox(
                                               width: 10.00,
                                             ),
                                             Text(value,
-                                                style: TextStyle(
+                                                style: const TextStyle(
                                                     fontSize: 20.00,
                                                     color: Colors.black)),
-                                            SizedBox(
+                                            const SizedBox(
                                               width: 10.00,
                                             ),
                                           ],
                                         ),
-                                        value: value,
                                       ))
                                   .toList(),
                               iconSize: 15,
                               elevation: 16,
-                              icon: Icon(
+                              icon: const Icon(
                                 Icons.arrow_drop_down_sharp,
                                 size: 40,
                               ),
                               underline: Container(
-                                decoration: BoxDecoration(),
+                                decoration: const BoxDecoration(),
                               ),
                               onChanged: (value) {
                                 setState(() {
@@ -462,7 +462,7 @@ class _ExpensseAddState extends State<ExpensseAdd> {
                         ],
                       )
                     : const SizedBox(),
-                Container(
+                SizedBox(
                   width: MediaQuery.of(context).size.width / 1.1,
                   child: TextField(
                     // keyboardAppearance: ,
@@ -486,7 +486,7 @@ class _ExpensseAddState extends State<ExpensseAdd> {
                   height: 20,
                 ),
                 isSame
-                    ? Container(
+                    ? SizedBox(
                         width: MediaQuery.of(context).size.width / 1.1,
                         child: TextField(
                           keyboardType: TextInputType.number,
@@ -514,12 +514,12 @@ class _ExpensseAddState extends State<ExpensseAdd> {
                       )
                     : Text(
                         "Total Amount Is : $totalAm",
-                        style: TextStyle(
+                        style: const TextStyle(
                             color: Colors.white,
                             fontSize: 20,
                             fontWeight: FontWeight.bold),
                       ),
-                SizedBox(
+                const SizedBox(
                   height: 20,
                 ),
                 isSplitwise
@@ -528,7 +528,7 @@ class _ExpensseAddState extends State<ExpensseAdd> {
                           // reverse: true,
                           itemBuilder: (ctx, i) => Column(
                             children: [
-                              Container(
+                              SizedBox(
                                 width: MediaQuery.of(context).size.width / 1.1,
                                 child: TextField(
                                   onChanged: (text) {
@@ -551,8 +551,8 @@ class _ExpensseAddState extends State<ExpensseAdd> {
                                 ),
                               ),
                               isSame
-                                  ? SizedBox()
-                                  : Container(
+                                  ? const SizedBox()
+                                  : SizedBox(
                                       width: MediaQuery.of(context).size.width /
                                           1.1,
                                       child: TextField(
@@ -577,7 +577,7 @@ class _ExpensseAddState extends State<ExpensseAdd> {
                                                 fontWeight: FontWeight.bold)),
                                       ),
                                     ),
-                              SizedBox(
+                              const SizedBox(
                                 height: 5,
                               ),
                             ],
@@ -585,7 +585,7 @@ class _ExpensseAddState extends State<ExpensseAdd> {
                           itemCount: noofPeople,
                         ),
                       )
-                    : SizedBox(),
+                    : const SizedBox(),
                 // const SizedBox(
                 //   height: 20,
                 // ),
