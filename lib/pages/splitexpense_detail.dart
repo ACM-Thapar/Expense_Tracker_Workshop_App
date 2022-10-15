@@ -1,10 +1,12 @@
+// ignore_for_file: must_be_immutable, prefer_typing_uninitialized_variables
+
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:connectivity_plus/connectivity_plus.dart';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/controllers/signin.dart';
 import 'package:flutter_app/expense_details.dart';
-import 'package:flutter_app/utils/alertdialog.dart';
+
 import 'package:intl/intl.dart';
 
 import '../controllers/fetch_data.dart';
@@ -34,11 +36,8 @@ class _SplitExpenseDetailsState extends State<SplitExpenseDetails> {
 
   void initGetData() async {
     splitTransactions = await getAllSplitWise();
-    // print(splitTransactions);
-
     SplitTransaction data;
     for (int i = 0; i < splitTransactions.length; i++) {
-      // print(splitTransactions[i].id);
       if (splitTransactions[i].id == widget.id) {
         data = splitTransactions[i];
 
@@ -51,6 +50,7 @@ class _SplitExpenseDetailsState extends State<SplitExpenseDetails> {
     }
   }
 
+  @override
   void initState() {
     if (auth.currentUser != null) {
       user = auth.currentUser!;
@@ -66,8 +66,8 @@ class _SplitExpenseDetailsState extends State<SplitExpenseDetails> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () {
-        Navigator.of(context)
-            .push(MaterialPageRoute(builder: ((context) => ExpenseDetails())));
+        Navigator.of(context).push(
+            MaterialPageRoute(builder: ((context) => const ExpenseDetails())));
         return Future.delayed(Duration.zero);
       },
       child: Material(
@@ -94,23 +94,19 @@ class SplitTile extends StatefulWidget {
   String desc;
 
   double amount;
-  // String time;
-  // String type;
+
   var people;
   int noOfPeople;
   var totalAmount;
   var given;
-  // int id;
 
   SplitTile(
-      {required this.amount,
+      {super.key,
+      required this.amount,
       required this.desc,
-      // required this.time,
-      // required this.type,
       required this.people,
       required this.noOfPeople,
       required this.totalAmount,
-      // required this.id,
       required this.given});
 
   @override
@@ -121,8 +117,6 @@ class _SplitTileState extends State<SplitTile> {
   Future<void> saveData(int index) async {
     User? user;
     user = auth.currentUser!;
-    String type = 'splitwise';
-
     int data1 = 0;
     data1 = transactionData?.total as int;
     final fi = FirebaseFirestore.instance.collection('users').doc(user.email);
@@ -141,7 +135,7 @@ class _SplitTileState extends State<SplitTile> {
         .collection('splitwise')
         .doc('${splitTransactions[0].id}')
         .update({'given': splitTransactions[0].given});
-    int currId = splitTransactions[0].id;
+    // int currId = splitTransactions[0].id;
     setState(() {});
     double? balance = transactionData?.totalAmount;
 
@@ -154,19 +148,12 @@ class _SplitTileState extends State<SplitTile> {
   }
 
   @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return Material(
       color: const Color(0xff010A43),
       child: Column(
         children: [
-          SizedBox(
+          const SizedBox(
             height: 40,
           ),
           Padding(
@@ -185,7 +172,7 @@ class _SplitTileState extends State<SplitTile> {
               ),
             ),
           ),
-          SizedBox(
+          const SizedBox(
             height: 10,
           ),
           Padding(
@@ -207,7 +194,7 @@ class _SplitTileState extends State<SplitTile> {
           const SizedBox(
             height: 40,
           ),
-          Container(
+          SizedBox(
             height: 600,
             child: Expanded(
               child: ListView.builder(
@@ -342,7 +329,7 @@ class _SplitTileState extends State<SplitTile> {
                             ],
                           ),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 20,
                         ),
                       ],
