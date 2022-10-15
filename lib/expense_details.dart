@@ -108,12 +108,10 @@ class _ExpenseDetailsState extends State<ExpenseDetails>
                       child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            const Text(
-                              "A.C.M",
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold),
+                            Image(
+                              height: 50,
+                              width: 100,
+                              image: AssetImage('assets/images/logo.png'),
                             ),
                             InkWell(
                               onTap: () {
