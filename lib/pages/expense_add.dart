@@ -24,7 +24,8 @@ class _ExpensseAddState extends State<ExpensseAdd> {
         col = Colors.blue;
         col2 = Colors.white;
       });
-    } else {
+    }
+    if (!isIncome) {
       setState(() {
         col = Colors.white;
         col2 = Colors.blue;
@@ -135,461 +136,446 @@ class _ExpensseAddState extends State<ExpensseAdd> {
   Widget build(BuildContext context) {
     return internetCheck
         ? const Material(
-            color: Color(0xff010A43),
+            // color: ,
             child: Center(
               child: Text(
                 "No Internet Connection. Please Connect To Internet To Continue.",
                 textAlign: TextAlign.center,
-                style: TextStyle(color: Colors.white, fontSize: 30),
+                style: TextStyle(fontSize: 30),
               ),
             ),
           )
         : Material(
-            color: const Color(0xff0E164C),
             child: SafeArea(
                 child: Column(
-              children: [
-                const SizedBox(
-                  height: 20,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    const Text("Add Transaction",
-                        style: TextStyle(
-                            fontSize: 24,
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold),
-                        textAlign: TextAlign.center),
-                    const SizedBox(
-                      width: 10,
-                    ),
-                    ElevatedButton(
-                      onPressed: () async {
-                        transactions.insert(
-                            transactions.length,
-                            Transactions(
-                                amount: isSplitwise
-                                    ? totalAm
-                                    : double.parse(transAmt),
-                                desc: transDesc,
-                                time: '${DateTime.now().day}',
-                                type: isIncome ? 'income' : 'expense',
-                                id: data1 + 1));
-                        balance = await getAllData();
-                        isSplitwise ? transAmt = '$totalAm' : null;
-                        isIncome
-                            ? balance = balance + double.parse(transAmt)
-                            : isSplitwise
-                                ? balance = balance - totalAm
-                                : balance = balance - double.parse(transAmt);
-
-                        setState(() {});
-                        saveData();
-                        setState(() {});
-                        Navigator.pushAndRemoveUntil(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const ExpenseDetails()),
-                            (route) => false);
-                      },
-                      style: ElevatedButton.styleFrom(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12), // <-- Radius
-                        ),
-                      ),
-                      child: const Padding(
-                        padding: EdgeInsets.all(8.0),
-                        child: Text('ADD'),
-                      ),
-                    )
-                  ],
-                ),
-                const SizedBox(
-                  height: 30,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    InkWell(
-                      onTap: () {
-                        setState(() {
-                          isIncome = false;
-                          isSplitwise = false;
-                          isSame = true;
-                          changeColor();
-                        });
-                      },
-                      child: Container(
-                        decoration: BoxDecoration(
-                            color: Colors.red,
-                            borderRadius: BorderRadius.circular(10),
-                            border: Border.all(width: 2, color: col2)),
-                        height: 60,
-                        width: MediaQuery.of(context).size.width / 3.2,
-                        child: Center(
-                            child: Text(
-                          "Expense",
-                          style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                              color: col2),
-                        )),
-                      ),
-                    ),
-                    InkWell(
-                      onTap: () {
-                        setState(() {
-                          isIncome = true;
-                          isSplitwise = false;
-                          isSame = true;
-                          changeColor();
-                        });
-                      },
-                      child: Container(
-                        decoration: BoxDecoration(
-                            color: Colors.green,
-                            borderRadius: BorderRadius.circular(10),
-                            border: Border.all(width: 2, color: col)),
-                        height: 60,
-                        width: MediaQuery.of(context).size.width / 3.2,
-                        child: Center(
-                            child: Text(
-                          "Income",
-                          style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                              color: col),
-                        )),
-                      ),
-                    ),
-                    InkWell(
-                      onTap: () {
-                        setState(() {
-                          col = Colors.white;
-                          col2 = Colors.white;
-                          isSplitwise = true;
-                        });
-                      },
-                      child: Container(
-                        decoration: BoxDecoration(
-                            color: Colors.purpleAccent,
-                            borderRadius: BorderRadius.circular(10),
-                            border: Border.all(
-                                width: 2,
-                                color: isSplitwise
-                                    ? Colors.lightBlueAccent
-                                    : Colors.white)),
-                        height: 60,
-                        width: MediaQuery.of(context).size.width / 3.2,
-                        child: Center(
-                            child: Text(
-                          "SplitWise",
-                          style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                              color: isSplitwise
-                                  ? Colors.lightBlueAccent
-                                  : Colors.white),
-                        )),
-                      ),
-                    ),
-                  ],
-                ),
-                // SizedBox(
-                //   height: 10,
-                // ),
-
-                const SizedBox(
-                  height: 20,
-                ),
-                isSplitwise
-                    ? Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          InkWell(
-                            onTap: () {
-                              setState(() {
-                                isSame = true;
-                              });
-                            },
-                            child: Container(
-                              decoration: BoxDecoration(
-                                  color: isSame
-                                      ? Colors.lightBlueAccent
-                                      : Colors.amber,
-                                  borderRadius: const BorderRadius.only(
-                                      topLeft: Radius.circular(10),
-                                      bottomLeft: Radius.circular(10)),
-                                  border: Border.all(
-                                    // width: 2,
-                                    color: Colors.white,
-                                  )),
-                              height: 30,
-                              width: MediaQuery.of(context).size.width / 4,
-                              child: const Center(
-                                  child: Text(
-                                "SameAmount",
-                                style: TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white),
-                              )),
-                            ),
-                          ),
-                          InkWell(
-                            onTap: () {
-                              setState(() {
-                                for (int i = 0; i < noofPeople; i++) {
-                                  amount[i] = 0;
-                                }
-                                totalAm = 0;
-
-                                isSame = false;
-                              });
-                            },
-                            child: Container(
-                              decoration: BoxDecoration(
-                                  color: isSame
-                                      ? Colors.amber
-                                      : Colors.lightBlueAccent,
-                                  borderRadius: const BorderRadius.only(
-                                      topRight: Radius.circular(10),
-                                      bottomRight: Radius.circular(10)),
-                                  border: Border.all(
-                                    // width: 2,
-                                    color: Colors.white,
-                                  )),
-                              height: 30,
-                              width: MediaQuery.of(context).size.width / 4,
-                              child: const Center(
-                                  child: Text(
-                                "CustomAmount",
-                                style: TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white),
-                              )),
-                            ),
-                          ),
-                        ],
-                      )
-                    : const SizedBox(),
-                const SizedBox(
-                  height: 10,
-                ),
-                isSplitwise
-                    ? Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          const Text(
-                            "NO Of People :",
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold),
-                          ),
-                          Container(
-                            height: 32,
-                            decoration: BoxDecoration(
-                                color: Colors.amber,
-                                border:
-                                    Border.all(width: 1, color: Colors.white),
-                                borderRadius: BorderRadius.circular(10)),
-                            child: DropdownButton(
-                              items: _mesaures
-                                  .map((String value) =>
-                                      DropdownMenuItem<String>(
-                                        value: value,
-                                        child: Row(
-                                          children: [
-                                            const SizedBox(
-                                              width: 10.00,
-                                            ),
-                                            Text(value,
-                                                style: const TextStyle(
-                                                    fontSize: 20.00,
-                                                    color: Colors.black)),
-                                            const SizedBox(
-                                              width: 10.00,
-                                            ),
-                                          ],
-                                        ),
-                                      ))
-                                  .toList(),
-                              iconSize: 15,
-                              elevation: 16,
-                              icon: const Icon(
-                                Icons.arrow_drop_down_sharp,
-                                size: 40,
-                              ),
-                              underline: Container(
-                                decoration: const BoxDecoration(),
-                              ),
-                              onChanged: (value) {
-                                setState(() {
-                                  noofPeople = int.parse('$value');
-                                  if (noofPeople > name.length) {
-                                    for (int i = name.length;
-                                        i < noofPeople;
-                                        i++) {
-                                      name.add('');
-                                      amount.add(0);
-                                      given.add(false);
-                                    }
-                                  } else if (noofPeople < name.length) {
-                                    int j = name.length;
-                                    for (int i = noofPeople; i < j; i++) {
-                                      name.removeLast();
-                                      amount.removeLast();
-                                      given.removeLast();
-                                    }
-                                  }
-                                  if (isSame && transAmt != '') {
-                                    totalAm = double.parse(transAmt);
-                                    for (int i = 0; i < noofPeople; i++) {
-                                      amount[i] =
-                                          double.parse(transAmt) / noofPeople;
-                                    }
-                                  }
-
-                                  setState(() {});
-                                });
-                              },
-                              value: '$noofPeople',
-                            ),
-                          ),
-                        ],
-                      )
-                    : const SizedBox(),
-                SizedBox(
-                  width: MediaQuery.of(context).size.width / 1.1,
-                  child: TextField(
-                    // keyboardAppearance: ,
-                    onChanged: (text) {
-                      text == '' ? transDesc = '' : transDesc = text;
-                    },
-                    cursorColor: Colors.white,
-                    decoration: InputDecoration(
-                        filled: true, //<-- SEE HERE
-                        fillColor: Colors.white,
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10.0),
-                        ),
-                        hintText: 'Transaction Details',
-                        hintStyle: const TextStyle(
-                            color: Color(0xff010A43),
-                            fontWeight: FontWeight.bold)),
+            children: [
+              const SizedBox(
+                height: 20,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  const Text("Add Transaction",
+                      style:
+                          TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                      textAlign: TextAlign.center),
+                  const SizedBox(
+                    width: 10,
                   ),
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                isSame
-                    ? SizedBox(
-                        width: MediaQuery.of(context).size.width / 1.1,
-                        child: TextField(
-                          keyboardType: TextInputType.number,
-                          onChanged: (text) {
+                  ElevatedButton(
+                    onPressed: () async {
+                      transactions.insert(
+                          transactions.length,
+                          Transactions(
+                              amount: isSplitwise
+                                  ? totalAm
+                                  : double.parse(transAmt),
+                              desc: transDesc,
+                              time: '${DateTime.now().day}',
+                              type: isIncome ? 'income' : 'expense',
+                              id: data1 + 1));
+                      balance = await getAllData();
+                      isSplitwise ? transAmt = '$totalAm' : null;
+                      isIncome
+                          ? balance = balance + double.parse(transAmt)
+                          : isSplitwise
+                              ? balance = balance - totalAm
+                              : balance = balance - double.parse(transAmt);
+
+                      setState(() {});
+                      saveData();
+                      setState(() {});
+                      Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const ExpenseDetails()),
+                          (route) => false);
+                    },
+                    style: ElevatedButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12), // <-- Radius
+                      ),
+                    ),
+                    child: const Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Text('ADD'),
+                    ),
+                  )
+                ],
+              ),
+              const SizedBox(
+                height: 30,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  InkWell(
+                    onTap: () {
+                      setState(() {
+                        isIncome = false;
+                        isSplitwise = false;
+                        isSame = true;
+                        changeColor();
+                      });
+                    },
+                    child: Container(
+                      decoration: BoxDecoration(
+                          color: isSplitwise ? col : col2,
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(
+                              width: 2, color: isSplitwise ? col2 : col)),
+                      height: 50,
+                      width: MediaQuery.of(context).size.width / 3.5,
+                      child: Center(
+                          child: Text(
+                        "Expense",
+                        style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: isSplitwise ? col2 : col),
+                      )),
+                    ),
+                  ),
+                  InkWell(
+                    onTap: () {
+                      setState(() {
+                        isIncome = true;
+                        isSplitwise = false;
+                        isSame = true;
+                        changeColor();
+                      });
+                    },
+                    child: Container(
+                      decoration: BoxDecoration(
+                          color: col,
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(width: 2, color: col2)),
+                      height: 50,
+                      width: MediaQuery.of(context).size.width / 3.2,
+                      child: Center(
+                          child: Text(
+                        "Income",
+                        style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: col2),
+                      )),
+                    ),
+                  ),
+                  InkWell(
+                    onTap: () {
+                      setState(() {
+                        isSplitwise = true;
+                        isIncome = false;
+                        changeColor();
+                      });
+                    },
+                    child: Container(
+                      decoration: BoxDecoration(
+                          color: isSplitwise ? Colors.blue : Colors.white,
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(
+                              width: 2,
+                              color: isSplitwise ? Colors.white : Colors.blue)),
+                      height: 50,
+                      width: MediaQuery.of(context).size.width / 3.5,
+                      child: Center(
+                          child: Text(
+                        "SplitWise",
+                        style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: isSplitwise ? Colors.white : Colors.blue),
+                      )),
+                    ),
+                  ),
+                ],
+              ),
+              // SizedBox(
+              //   height: 10,
+              // ),
+
+              const SizedBox(
+                height: 20,
+              ),
+              isSplitwise
+                  ? Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        InkWell(
+                          onTap: () {
                             setState(() {
-                              transAmt = text;
-                              totalAm = double.parse(transAmt);
-                              for (int i = 0; i < noofPeople; i++) {
-                                amount[i] = double.parse(transAmt) / noofPeople;
-                              }
+                              isSame = true;
                             });
                           },
-                          cursorColor: Colors.white,
-                          decoration: InputDecoration(
-                              filled: true, //<-- SEE HERE
-                              fillColor: Colors.white,
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10.0),
-                              ),
-                              hintText: 'Transaction Amount',
-                              hintStyle: const TextStyle(
-                                  color: Color(0xff010A43),
-                                  fontWeight: FontWeight.bold)),
-                        ),
-                      )
-                    : Text(
-                        "Total Amount Is : $totalAm",
-                        style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold),
-                      ),
-                const SizedBox(
-                  height: 20,
-                ),
-                isSplitwise
-                    ? Expanded(
-                        child: ListView.builder(
-                          // reverse: true,
-                          itemBuilder: (ctx, i) => Column(
-                            children: [
-                              SizedBox(
-                                width: MediaQuery.of(context).size.width / 1.1,
-                                child: TextField(
-                                  onChanged: (text) {
-                                    setState(() {
-                                      name[i] = text;
-                                    });
-                                  },
-                                  cursorColor: Colors.white,
-                                  decoration: InputDecoration(
-                                      filled: true, //<-- SEE HERE
-                                      fillColor: Colors.white,
-                                      border: OutlineInputBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(10.0),
-                                      ),
-                                      hintText: 'Person ${i + 1} ',
-                                      hintStyle: const TextStyle(
-                                          color: Color(0xff010A43),
-                                          fontWeight: FontWeight.bold)),
-                                ),
-                              ),
-                              isSame
-                                  ? const SizedBox()
-                                  : SizedBox(
-                                      width: MediaQuery.of(context).size.width /
-                                          1.1,
-                                      child: TextField(
-                                        onChanged: (text) {
-                                          amount[i] = double.parse(text);
-                                          totalAm = 0;
-                                          for (int j = 0; j < noofPeople; j++) {
-                                            totalAm = totalAm + amount[j];
-                                          }
-                                        },
-                                        cursorColor: Colors.white,
-                                        decoration: InputDecoration(
-                                            filled: true, //<-- SEE HERE
-                                            fillColor: Colors.white,
-                                            border: OutlineInputBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(10.0),
-                                            ),
-                                            hintText: 'Amount',
-                                            hintStyle: const TextStyle(
-                                                color: Color(0xff010A43),
-                                                fontWeight: FontWeight.bold)),
-                                      ),
-                                    ),
-                              const SizedBox(
-                                height: 5,
-                              ),
-                            ],
+                          child: Container(
+                            decoration: BoxDecoration(
+                                color: isSame ? Colors.blue : Colors.white,
+                                borderRadius: const BorderRadius.only(
+                                    topLeft: Radius.circular(10),
+                                    bottomLeft: Radius.circular(10)),
+                                border: Border.all(
+                                  // width: 2,
+                                  color: Colors.black,
+                                )),
+                            height: 30,
+                            width: MediaQuery.of(context).size.width / 4,
+                            child: Center(
+                                child: Text(
+                              "SameAmount",
+                              style: TextStyle(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.bold,
+                                  color: isSame ? Colors.white : Colors.black),
+                            )),
                           ),
-                          itemCount: noofPeople,
                         ),
-                      )
-                    : const SizedBox(),
-                // const SizedBox(
-                //   height: 20,
-                // ),
-              ],
-            )));
+                        InkWell(
+                          onTap: () {
+                            setState(() {
+                              for (int i = 0; i < noofPeople; i++) {
+                                amount[i] = 0;
+                              }
+                              totalAm = 0;
+
+                              isSame = false;
+                            });
+                          },
+                          child: Container(
+                            decoration: BoxDecoration(
+                                color: isSame ? Colors.white : Colors.blue,
+                                borderRadius: const BorderRadius.only(
+                                    topRight: Radius.circular(10),
+                                    bottomRight: Radius.circular(10)),
+                                border: Border.all(
+                                  // width: 2,
+                                  color: Colors.black,
+                                )),
+                            height: 30,
+                            width: MediaQuery.of(context).size.width / 4,
+                            child: Center(
+                                child: Text(
+                              "CustomAmount",
+                              style: TextStyle(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.bold,
+                                  color: isSame ? Colors.black : Colors.white),
+                            )),
+                          ),
+                        ),
+                      ],
+                    )
+                  : const SizedBox(),
+              const SizedBox(
+                height: 10,
+              ),
+              isSplitwise
+                  ? Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        const Text(
+                          "Number Of People :",
+                          style: TextStyle(
+                              fontSize: 20, fontWeight: FontWeight.bold),
+                        ),
+                        Container(
+                          height: 32,
+                          decoration: BoxDecoration(
+                              color: Colors.blue,
+                              border: Border.all(width: 1, color: Colors.white),
+                              borderRadius: BorderRadius.circular(10)),
+                          child: DropdownButton(
+                            items: _mesaures
+                                .map((String value) => DropdownMenuItem<String>(
+                                      value: value,
+                                      child: Row(
+                                        children: [
+                                          const SizedBox(
+                                            width: 10.00,
+                                          ),
+                                          Text(value,
+                                              style: const TextStyle(
+                                                  fontSize: 20.00,
+                                                  color: Colors.black)),
+                                          const SizedBox(
+                                            width: 10.00,
+                                          ),
+                                        ],
+                                      ),
+                                    ))
+                                .toList(),
+                            iconSize: 15,
+                            elevation: 16,
+                            icon: const Icon(
+                              Icons.arrow_drop_down_sharp,
+                              size: 40,
+                            ),
+                            underline: Container(
+                              decoration: const BoxDecoration(),
+                            ),
+                            onChanged: (value) {
+                              setState(() {
+                                noofPeople = int.parse('$value');
+                                if (noofPeople > name.length) {
+                                  for (int i = name.length;
+                                      i < noofPeople;
+                                      i++) {
+                                    name.add('');
+                                    amount.add(0);
+                                    given.add(false);
+                                  }
+                                } else if (noofPeople < name.length) {
+                                  int j = name.length;
+                                  for (int i = noofPeople; i < j; i++) {
+                                    name.removeLast();
+                                    amount.removeLast();
+                                    given.removeLast();
+                                  }
+                                }
+                                if (isSame && transAmt != '') {
+                                  totalAm = double.parse(transAmt);
+                                  for (int i = 0; i < noofPeople; i++) {
+                                    amount[i] =
+                                        double.parse(transAmt) / noofPeople;
+                                  }
+                                }
+
+                                setState(() {});
+                              });
+                            },
+                            value: '$noofPeople',
+                          ),
+                        ),
+                      ],
+                    )
+                  : const SizedBox(),
+              SizedBox(
+                width: MediaQuery.of(context).size.width / 1.1,
+                child: TextField(
+                  // keyboardAppearance: ,
+                  onChanged: (text) {
+                    text == '' ? transDesc = '' : transDesc = text;
+                  },
+                  cursorColor: Colors.white,
+                  decoration: InputDecoration(
+                      filled: true, //<-- SEE HERE
+                      fillColor: Colors.white,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                      hintText: 'Transaction Details',
+                      hintStyle: const TextStyle(
+                          color: Color(0xff010A43),
+                          fontWeight: FontWeight.bold)),
+                ),
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              isSame
+                  ? SizedBox(
+                      width: MediaQuery.of(context).size.width / 1.1,
+                      child: TextField(
+                        keyboardType: TextInputType.number,
+                        onChanged: (text) {
+                          setState(() {
+                            transAmt = text;
+                            totalAm = double.parse(transAmt);
+                            for (int i = 0; i < noofPeople; i++) {
+                              amount[i] = double.parse(transAmt) / noofPeople;
+                            }
+                          });
+                        },
+                        cursorColor: Colors.white,
+                        decoration: InputDecoration(
+                            filled: true, //<-- SEE HERE
+                            fillColor: Colors.white,
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                            hintText: 'Transaction Amount',
+                            hintStyle: const TextStyle(
+                                color: Color(0xff010A43),
+                                fontWeight: FontWeight.bold)),
+                      ),
+                    )
+                  : Text(
+                      "Total Amount Is : $totalAm",
+                      style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold),
+                    ),
+              const SizedBox(
+                height: 20,
+              ),
+              isSplitwise
+                  ? Expanded(
+                      child: ListView.builder(
+                        // reverse: true,
+                        itemBuilder: (ctx, i) => Column(
+                          children: [
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width / 1.1,
+                              child: TextField(
+                                onChanged: (text) {
+                                  setState(() {
+                                    name[i] = text;
+                                  });
+                                },
+                                cursorColor: Colors.white,
+                                decoration: InputDecoration(
+                                    filled: true, //<-- SEE HERE
+                                    fillColor: Colors.white,
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(10.0),
+                                    ),
+                                    hintText: 'Person ${i + 1} ',
+                                    hintStyle: const TextStyle(
+                                        color: Color(0xff010A43),
+                                        fontWeight: FontWeight.bold)),
+                              ),
+                            ),
+                            isSame
+                                ? const SizedBox()
+                                : SizedBox(
+                                    width:
+                                        MediaQuery.of(context).size.width / 1.1,
+                                    child: TextField(
+                                      onChanged: (text) {
+                                        amount[i] = double.parse(text);
+                                        totalAm = 0;
+                                        for (int j = 0; j < noofPeople; j++) {
+                                          totalAm = totalAm + amount[j];
+                                        }
+                                      },
+                                      cursorColor: Colors.white,
+                                      decoration: InputDecoration(
+                                          filled: true, //<-- SEE HERE
+                                          fillColor: Colors.white,
+                                          border: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(10.0),
+                                          ),
+                                          hintText: 'Amount',
+                                          hintStyle: const TextStyle(
+                                              color: Color(0xff010A43),
+                                              fontWeight: FontWeight.bold)),
+                                    ),
+                                  ),
+                            const SizedBox(
+                              height: 5,
+                            ),
+                          ],
+                        ),
+                        itemCount: noofPeople,
+                      ),
+                    )
+                  : const SizedBox(),
+              // const SizedBox(
+              //   height: 20,
+              // ),
+            ],
+          )));
   }
 }

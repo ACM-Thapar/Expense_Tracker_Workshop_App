@@ -66,8 +66,11 @@ class _SplitExpenseDetailsState extends State<SplitExpenseDetails> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () {
-        Navigator.of(context).push(
-            MaterialPageRoute(builder: ((context) => const ExpenseDetails())));
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => const ExpenseDetails()),
+            (route) => false);
+
         return Future.delayed(Duration.zero);
       },
       child: Material(
@@ -162,12 +165,11 @@ class _SplitTileState extends State<SplitTile> {
               width: MediaQuery.of(context).size.width,
               decoration: BoxDecoration(
                   color: Colors.white, borderRadius: BorderRadius.circular(10)),
-              height: 40,
               child: Text(
                 ' Description : ${widget.desc.toUpperCase()}',
                 style: const TextStyle(
                     color: Colors.black,
-                    fontSize: 30,
+                    fontSize: 25,
                     fontWeight: FontWeight.bold),
               ),
             ),
@@ -181,12 +183,11 @@ class _SplitTileState extends State<SplitTile> {
               width: MediaQuery.of(context).size.width,
               decoration: BoxDecoration(
                   color: Colors.white, borderRadius: BorderRadius.circular(10)),
-              height: 40,
               child: Text(
                 ' Total Amount : ${widget.amount}',
                 style: const TextStyle(
                     color: Colors.black,
-                    fontSize: 30,
+                    fontSize: 22,
                     fontWeight: FontWeight.bold),
               ),
             ),
@@ -222,12 +223,16 @@ class _SplitTileState extends State<SplitTile> {
                                           fontSize: 20,
                                           fontWeight: FontWeight.bold),
                                     ),
-                                    Text(
-                                      'Amount : ${double.parse('${widget.totalAmount[i]}').toStringAsFixed(2)}',
-                                      style: const TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 25,
-                                          fontWeight: FontWeight.bold),
+                                    Container(
+                                      width: MediaQuery.of(context).size.width /
+                                          1.5,
+                                      child: Text(
+                                        'Amount : ${double.parse('${widget.totalAmount[i]}').toStringAsFixed(2)}',
+                                        style: const TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 25,
+                                            fontWeight: FontWeight.bold),
+                                      ),
                                     ),
                                   ],
                                 ),

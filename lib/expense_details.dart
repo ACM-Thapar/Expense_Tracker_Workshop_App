@@ -539,11 +539,14 @@ class TransactionTile extends StatelessWidget {
           ],
         ),
       ),
-      trailing: Text(
-        "₹${amount.toStringAsFixed(2)}",
-        style: const TextStyle(
-          fontSize: 20,
-          color: Colors.white,
+      trailing: Container(
+        width: MediaQuery.of(context).size.width / 4.3,
+        child: Text(
+          "₹${amount.toStringAsFixed(2)}",
+          style: const TextStyle(
+            fontSize: 20,
+            color: Colors.white,
+          ),
         ),
       ),
     );
