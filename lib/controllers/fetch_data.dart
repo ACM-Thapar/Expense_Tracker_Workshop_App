@@ -26,8 +26,7 @@ Future<double> getAllData() async {
   }
   transactionData = TransactionData.fromMap(
       Map<String, dynamic>.from(val.data() as Map<String, dynamic>));
-  // await Future.delayed(const Duration(milliseconds: 1));
-  // print(transactionData?.total);
+
   return double.parse('${transactionData?.totalAmount}');
 }
 

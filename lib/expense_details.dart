@@ -2,7 +2,6 @@
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/gestures.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter_app/controllers/fetch_data.dart';
 import 'package:flutter_app/controllers/signin.dart';
 import 'package:flutter_app/pages/expense_add.dart';
@@ -31,18 +30,10 @@ class _ExpenseDetailsState extends State<ExpenseDetails>
   final Connectivity _connectivity = Connectivity();
   final FirebaseAuth auth = FirebaseAuth.instance;
   late TabController _tabController;
-
-  // String selection = "";
-
-  // String transDesc = "";
-  // String transAmt = "";
-
   double balance = 0;
 
   void initsharedPrefence() async {
     transactions = await getAllData2();
-
-    print(transactions);
 
     setState(() {});
 
@@ -108,12 +99,10 @@ class _ExpenseDetailsState extends State<ExpenseDetails>
                       child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            const Text(
-                              "A.C.M",
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold),
+                            Image(
+                              height: 50,
+                              width: 100,
+                              image: AssetImage('assets/images/logo.png'),
                             ),
                             InkWell(
                               onTap: () {
@@ -550,11 +539,14 @@ class TransactionTile extends StatelessWidget {
           ],
         ),
       ),
-      trailing: Text(
-        "₹${amount.toStringAsFixed(2)}",
-        style: const TextStyle(
-          fontSize: 20,
-          color: Colors.white,
+      trailing: Container(
+        width: MediaQuery.of(context).size.width / 4.3,
+        child: Text(
+          "₹${amount.toStringAsFixed(2)}",
+          style: const TextStyle(
+            fontSize: 20,
+            color: Colors.white,
+          ),
         ),
       ),
     );

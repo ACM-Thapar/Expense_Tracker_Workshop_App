@@ -19,8 +19,6 @@ Future<void> signup(BuildContext context) async {
     final AuthCredential authCredential = GoogleAuthProvider.credential(
         idToken: googleSignInAuthentication.idToken,
         accessToken: googleSignInAuthentication.accessToken);
-
-    // Getting users credential
     UserCredential result = await auth.signInWithCredential(authCredential);
 
     User user = result.user!;
